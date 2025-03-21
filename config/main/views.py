@@ -1,21 +1,25 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse
 
-# Create your views here.
-from django.http import HttpResponse
-
-def index():
+def index(request):
     return HttpResponse('Hello World')
 
-def set_cookie(request):
-    response = HttpResponse("Cookie o‘rnatildi!")
-    response.set_cookie('user', 'hello world', max_age=3600)
-    return response
+def add_to_session(request):
+    request.session['username'] = 'Asilbek'
+    request.session['role'] = 'bankir'
+    return HttpResponse("Sessiyaga ma'lumot qo'shildi.")
 
-def get_cookie(request):
-    user = request.COOKIES.get('user', 'Cookie topilmadi!')
-    return HttpResponse(f"Cookie qiymati: {user}")
 
-def delete_cookie(request):
-    response = HttpResponse("Cookie o‘chirildi!")
-    response.delete_cookie('user')
-    return response
+def view_session(request):
+    username = request.session.get('username', 'Mavjud emas')
+    role = request.session.get('role', 'Mavjud emas')
+    return HttpResponse(f"Foydalanuvchi: {username}, Rol: {role}")
+
+def update_session(request):
+    request.session['role'] = 'senior developer'
+    return HttpResponse("Sessiya ma'lumotlari o'zgartirildi.")
+
+def delete_session(request):
+    request.session.flush()
+    return HttpResponse("Sessiya o'chirildi.")
+
+
